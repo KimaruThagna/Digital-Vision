@@ -1,1 +1,4 @@
 .idea/
+.models/
+.inputs/
+.outputs/
