@@ -1,0 +1,2 @@
+To run the program, download the model weights and place the h5 file in models/ folder<br/>
+To download the model weights, follow the link https://github.com/OlafenwaMoses/ImageAI/releases/download/1.0/resnet50_coco_best_v2.0.1.h5
