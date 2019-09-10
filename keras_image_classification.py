@@ -18,9 +18,10 @@ loaded_img = img_to_array(load_img(img, target_size=(224,224)))
 input = np.expand_dims(loaded_img,axis=0)
 
 #preprocess image accordig to the various models
-vgg_preprocess = vgg_19.preprocess_input(input.copy())
-resnet_preprocess = resnet.preprocess_input(input.copy())
-inception_preprocess = inception.preprocess_input(input.copy())
+
+vgg_preprocess = vgg19.preprocess_input(input.copy())
+resnet_preprocess = resnet50.preprocess_input(input.copy())
+inception_preprocess = inception_v3.preprocess_input(input.copy())
 # make predictions
 predictions_vgg19 = vgg_19.predict(vgg_preprocess)
 label_vgg19 = decode_predictions(predictions_vgg19)
