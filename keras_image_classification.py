@@ -21,3 +21,15 @@ input = np.expand_dims(loaded_img,axis=0)
 vgg_preprocess = vgg_19.preprocess_input(input.copy())
 resnet_preprocess = resnet.preprocess_input(input.copy())
 inception_preprocess = inception.preprocess_input(input.copy())
+# make predictions
+predictions_vgg19 = vgg_19.predict(vgg_preprocess)
+label_vgg19 = decode_predictions(predictions_vgg19)
+print (f'Vgg_19 prediction={label_vgg19}')
+
+predictions_resnet = resnet.predict(resnet_preprocess)
+label_resnet = decode_predictions(predictions_resnet)
+print (f'Resnent prediction={label_resnet}')
+
+predictions_inception = inception.predict(inception_preprocess)
+label_inception = decode_predictions(predictions_inception)
+print (f'Inception prediction={label_inception}')
