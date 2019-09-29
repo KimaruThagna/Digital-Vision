@@ -4,7 +4,7 @@ import os
 execution_path = os.getcwd()
 
 prediction = CustomImagePrediction()
-prediction.setModelTypeAsResNet()
+prediction.setModelTypeAsResNet() #others include SqueezeNet, ResNet, InceptionV3 and DenseNet
 prediction.setModelPath("models/idenprof_061-0.7933.h5") # weights as output of the training process on custom dataset
 prediction.setJsonPath("idenprof_model_class.json") # mapping
 prediction.loadModel(num_objects=10) # prediction classes
