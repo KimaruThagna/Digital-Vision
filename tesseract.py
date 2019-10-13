@@ -89,3 +89,31 @@ orig = image.copy()
 (newW, newH) = (args["width"], args["height"])
 rW = origW / float(newW)
 rH = origH / float(newH)
+
+resize
+the
+image and grab
+the
+new
+image
+dimensions
+image = cv2.resize(image, (newW, newH))
+(H, W) = image.shape[:2]
+
+# define the two output layer names for the EAST detector model that
+# we are interested in -- the first is the output probabilities and the
+# second can be used to derive the bounding box coordinates of text
+layerNames = [
+    "feature_fusion/Conv_7/Sigmoid",
+    "feature_fusion/concat_3"]
+
+# load the pre-trained EAST text detector
+print("[INFO] loading EAST text detector...")
+net = cv2.dnn.readNet(args["east"])
+
+# construct a blob from the image and then perform a forward pass of
+# the model to obtain the two output layer sets
+blob = cv2.dnn.blobFromImage(image, 1.0, (W, H),
+                             (123.68, 116.78, 103.94), swapRB=True, crop=False)
+net.setInput(blob)
+(scores, geometry) = net.forward(layerNames)
