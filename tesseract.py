@@ -149,3 +149,18 @@ for (startX, startY, endX, endY) in boxes:
 
     # extract the actual padded ROI
     roi = orig[startY:endY, startX:endX]
+
+    # in order to apply Tesseract v4 to OCR text we must supply
+    # (1) a language, (2) an OEM flag of 4, indicating that the we
+    # wish to use the LSTM neural net model for OCR, and finally
+    # (3) an OEM value, in this case, 7 which implies that we are
+    # treating the ROI as a single line of text
+    config = ("-l eng --oem 1 --psm 7")
+    text = pytesseract.image_to_string(roi, config=config)
+
+    # add the bounding box coordinates and OCR'd text to the list
+    # of results
+    results.append(((startX, startY, endX, endY), text))
+
+# sort the results bounding box coordinates from top to bottom
+results = sorted(results, key=lambda r: r[0][1])
