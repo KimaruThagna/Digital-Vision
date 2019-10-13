@@ -117,3 +117,35 @@ blob = cv2.dnn.blobFromImage(image, 1.0, (W, H),
                              (123.68, 116.78, 103.94), swapRB=True, crop=False)
 net.setInput(blob)
 (scores, geometry) = net.forward(layerNames)
+
+# decode the predictions, then  apply non-maxima suppression to
+# suppress weak, overlapping bounding boxes
+(rects, confidences) = decode_predictions(scores, geometry)
+boxes = non_max_suppression(np.array(rects), probs=confidences)
+
+# initialize the list of results
+results = []
+
+# loop over the bounding boxes
+for (startX, startY, endX, endY) in boxes:
+    # scale the bounding box coordinates based on the respective
+    # ratios
+    startX = int(startX * rW)
+    startY = int(startY * rH)
+    endX = int(endX * rW)
+    endY = int(endY * rH)
+
+    # in order to obtain a better OCR of the text we can potentially
+    # apply a bit of padding surrounding the bounding box -- here we
+    # are computing the deltas in both the x and y directions
+    dX = int((endX - startX) * args["padding"])
+    dY = int((endY - startY) * args["padding"])
+
+    # apply padding to each side of the bounding box, respectively
+    startX = max(0, startX - dX)
+    startY = max(0, startY - dY)
+    endX = min(origW, endX + (dX * 2))
+    endY = min(origH, endY + (dY * 2))
+
+    # extract the actual padded ROI
+    roi = orig[startY:endY, startX:endX]
