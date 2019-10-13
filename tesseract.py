@@ -82,3 +82,10 @@ args = vars(ap.parse_args())
 image = cv2.imread(args["image"])
 orig = image.copy()
 (origH, origW) = image.shape[:2]
+
+
+# set the new width and height and then determine the ratio in change
+# for both the width and height
+(newW, newH) = (args["width"], args["height"])
+rW = origW / float(newW)
+rH = origH / float(newH)
