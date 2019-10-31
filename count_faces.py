@@ -15,3 +15,6 @@ else:
 
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 1) # green boxes
+        
+cv2.rectangle(img, ((0,img.shape[0] -25)),(270, img.shape[0]), (255,255,255), -1) #create rectangle to display text
+cv2.putText(img, "I have seen: " + str(faces.shape[0]), (0,img.shape[0] -10)+"faces", cv2.FONT_HERSHEY_TRIPLEX, 0.5, (0,0,0), 1)
