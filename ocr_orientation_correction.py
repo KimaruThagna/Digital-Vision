@@ -51,7 +51,27 @@ def shape_selection(event, x, y, flags, param):
 
 
 # load the image and setup the mouse callback function
-image = img_rotated
-image_copy = image.copy()
+image_copy = img_rotated.copy()
 cv2.namedWindow("image")
 cv2.setMouseCallback("image", shape_selection)
+
+# keep looping until the 'q' key is pressed
+while True:
+    # display the image and wait for a keypress
+    cv2.imshow("image", image_copy)
+    key = cv2.waitKey(1) & 0xFF
+
+    if key==13: # If 'enter' is pressed, apply OCR
+        break
+
+    if key == ord("c"): # Clear the selection when 'c' is pressed
+        image = image_copy.copy()
+
+if len(coordinates) == 2: # top left and bottom right coords have been retrieved
+    image_roi = image_copy[coordinates[0][1]:coordinates[1][1],
+                coordinates[0][0]:coordinates[1][0]]
+    cv2.imshow("Selected Region of Interest - Press any key to proceed", image_roi)
+    cv2.waitKey(0)
+
+# closing all open windows
+cv2.destroyAllWindows()
