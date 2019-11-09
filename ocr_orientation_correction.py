@@ -48,3 +48,10 @@ def shape_selection(event, x, y, flags, param):
         # Drawing a rectangle around the region of interest (roi) after mouse button is released
         cv2.rectangle(img_1, coordinates[0], coordinates[1], (0, 255, 255), 2)
         cv2.imshow("Region of interest", img_1)
+
+
+# load the image and setup the mouse callback function
+image = img_rotated
+image_copy = image.copy()
+cv2.namedWindow("image")
+cv2.setMouseCallback("image", shape_selection)
