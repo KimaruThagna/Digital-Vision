@@ -71,7 +71,11 @@ if len(coordinates) == 2: # top left and bottom right coords have been retrieved
     image_roi = image_copy[coordinates[0][1]:coordinates[1][1],
                 coordinates[0][0]:coordinates[1][0]]
     cv2.imshow("Selected Region of Interest - Press any key to proceed", image_roi)
+    extracted_text = pytesseract.image_to_string(image_roi)# alternatives include google or amazon vision
+    print(f'The text in the selected region is :\n {extracted_text}')
+
     cv2.waitKey(0)
 
 # closing all open windows
 cv2.destroyAllWindows()
+#perform OCR on the ROI
