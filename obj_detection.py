@@ -48,10 +48,8 @@ while True:
     mask = cv2.erode(mask, None, iterations=2) # remove boundaries in region of interest hence make smaller
     mask = cv2.dilate(mask, None, iterations=2) # opposite of erosion
 
-    # find contours in the mask and initialize the current
-    # (x, y) center of the ball
-    cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
-                            cv2.CHAIN_APPROX_SIMPLE)
+    # find contours in the mask and initialize the current (x, y) center of the ball
+    cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
     center = None
 
@@ -83,7 +81,7 @@ while True:
 
         # otherwise, compute the thickness of the line and draw the connecting lines
         thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5) # most recent item is thicker
-        cv2.line(frame, tracked_points[i - 1], tracked_points[i], (0, 0, 255), thickness)
+        cv2.line(frame, tracked_points[i - 1], tracked_points[i], (255, 0, 0), thickness)
 
     # show the frame to our screen
     cv2.imshow("Frame", frame)
