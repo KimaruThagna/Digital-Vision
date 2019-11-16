@@ -75,3 +75,29 @@ while True:
 
     # update the points queue
     tracked_points.appendleft(center)
+    # loop over the set of tracked points
+    for i in range(1, len(tracked_points)):
+        # if either of the tracked points are None, ignore them
+        if tracked_points[i - 1] is None or tracked_points[i] is None:
+            continue
+
+        # otherwise, compute the thickness of the line and draw the connecting lines
+        thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5) # most recent item is thicker
+        cv2.line(frame, tracked_points[i - 1], tracked_points[i], (0, 0, 255), thickness)
+
+    # show the frame to our screen
+    cv2.imshow("Frame", frame)
+    key = cv2.waitKey(1) & 0xFF
+
+    # if the 'q' key is pressed, stop the loop
+    if key == ord("q"):
+        break
+
+# if we are not using a video file, stop the camera video stream
+if not args.get("video", False):
+    vs.stop()
+else:# otherwise, release the camera
+    vs.release()
+
+# close all windows
+cv2.destroyAllWindows()
