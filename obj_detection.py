@@ -20,16 +20,22 @@ args = vars(ap.parse_args())
 greenLower = (29, 86, 6)
 greenUpper = (64, 255, 255)
 tracked_points = deque(maxlen=args["buffer"])
+counter = 0
+(dX, dY) = (0, 0)
+direction = ""
 
 # if a video path was not supplied, grab the reference to the webcam
 if not args.get("video", False):
     vs = VideoStream(src=0).start() # start webcam
+
+
 else: # otherwise, grab a reference to the video file
     vs = cv2.VideoCapture(args["video"])
 # allow the camera or video file to warm up
 time.sleep(2.0)
 # infinite loop
-
+vid_cod = cv2.VideoWriter_fourcc(*'MP4V')
+output = cv2.VideoWriter("cam_video.mp4", vid_cod, 20.0, (640, 480))
 while True:
     frame = vs.read() # grab the current frame
     # handle the frame from VideoCapture or VideoStream
@@ -65,14 +71,46 @@ while True:
 
         # only proceed if the radius meets a minimum size
         if radius > 10:
-            # draw the circle and centroid on the frame,
-            # then update the list of tracked points
-            cv2.circle(frame, (int(x), int(y)), int(radius),
+
+
+            cv2.circle(frame, (int(x), int(y)), int(radius), # draw the circle and centroid on the frame,
                        (0, 255, 255), 2)
-            cv2.circle(frame, center, 5, (0, 0, 255), -1)
+            cv2.circle(frame, center, 5, (0, 255, 0), -1) # centroid
 
     # update the points queue
     tracked_points.appendleft(center)
+    # loop over the set of tracked points
+    for i in np.arange(1, len(tracked_points)):
+        # if either of the tracked points are None, ignore
+        # them
+        if tracked_points[i - 1] is None or tracked_points[i] is None:
+            continue
+
+        # check to see if enough points have been accumulated in
+        # the buffer
+        if counter >= 10 and i == 1 and tracked_points[-10] is not None:
+            # compute the difference between the x and y
+            # coordinates and re-initialize the direction
+            # text variables
+            dX = tracked_points[-10][0] - tracked_points[i][0]
+            dY = tracked_points[-10][1] - tracked_points[i][1]
+            (dirX, dirY) = ("", "")
+
+            # ensure there is significant movement in the
+            # x-direction
+            if np.abs(dX) > 20:
+                dirX = "East" if np.sign(dX) == 1 else "West"
+
+            # ensure there is significant movement in the
+            # y-direction
+            if np.abs(dY) > 20:
+                dirY = "North" if np.sign(dY) == 1 else "South"
+
+            # handle when both directions are non-empty
+            if dirX != "" and dirY != "":
+                direction = f'{dirY}-{dirX}'
+            else:# otherwise, only one direction is non-empty
+                direction = dirX if dirX != "" else dirY
     # loop over the set of tracked points
     for i in range(1, len(tracked_points)):
         # if either of the tracked points are None, ignore them
@@ -82,6 +120,7 @@ while True:
         # otherwise, compute the thickness of the line and draw the connecting lines
         thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5) # most recent item is thicker
         cv2.line(frame, tracked_points[i - 1], tracked_points[i], (255, 0, 0), thickness)
+
 
     # show the frame to our screen
     cv2.imshow("Frame", frame)
@@ -94,8 +133,11 @@ while True:
 # if we are not using a video file, stop the camera video stream
 if not args.get("video", False):
     vs.stop()
+
 else:# otherwise, release the camera
     vs.release()
 
 # close all windows
+output.release()
+
 cv2.destroyAllWindows()
