@@ -86,8 +86,8 @@ while True:
         if tracked_points[i - 1] is None or tracked_points[i] is None:
             continue
 
-        # check to see if enough points have been accumulated in
-        # the buffer
+        # check to see if enough points have been accumulated in buffer
+
         if counter >= 10 and i == 1 and tracked_points[-10] is not None:
             # compute the difference between the x and y
             # coordinates and re-initialize the direction
@@ -120,11 +120,14 @@ while True:
         # otherwise, compute the thickness of the line and draw the connecting lines
         thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5) # most recent item is thicker
         cv2.line(frame, tracked_points[i - 1], tracked_points[i], (255, 0, 0), thickness)
-
+        # show the movement deltas and the direction of movement on frame
+        cv2.putText(frame, direction, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,  0.65, (0, 255, 255), 3)
+        cv2.putText(frame, f'dx: {dX}, dy: {dY}', (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX,   0.35, (0, 255, 0), 1)
 
     # show the frame to our screen
     cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
+    counter+=1
 
     # if the 'q' key is pressed, stop the loop
     if key == ord("q"):
