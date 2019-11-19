@@ -14,3 +14,9 @@ args = vars(ap.parse_args())
 # initialize the HOG descriptor/person detector
 hog = cv2.HOGDescriptor()
 hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+
+for imagePath in paths.list_images(args["images"]):
+	# load the image and resize it to reduce detection time & improve  accuracy
+	image = cv2.imread(imagePath)
+	image = imutils.resize(image, width=min(400, image.shape[1]))
+	orig = image.copy()
