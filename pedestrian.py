@@ -27,6 +27,7 @@ for imagePath in paths.list_images(args["images"]):
         # fairly large overlap threshold to try to maintain overlapping
         # boxes that are still people
         rects = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rects])
+
         pick = non_max_suppression(rects, probs=None, overlapThresh=0.65)
         # draw the final bounding boxes
         for (xA, yA, xB, yB) in pick:
