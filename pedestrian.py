@@ -10,3 +10,7 @@ import cv2
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--images", required=True, help="path to images directory")
 args = vars(ap.parse_args())
+
+# initialize the HOG descriptor/person detector
+hog = cv2.HOGDescriptor()
+hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
