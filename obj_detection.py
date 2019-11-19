@@ -71,8 +71,6 @@ while True:
 
         # only proceed if the radius meets a minimum size
         if radius > 10:
-
-
             cv2.circle(frame, (int(x), int(y)), int(radius), # draw the circle and centroid on the frame,
                        (0, 255, 255), 2)
             cv2.circle(frame, center, 5, (0, 255, 0), -1) # centroid
@@ -82,12 +80,11 @@ while True:
     # loop over the set of tracked points
     for i in np.arange(1, len(tracked_points)):
         # if either of the tracked points are None, ignore
-        # them
+
         if tracked_points[i - 1] is None or tracked_points[i] is None:
             continue
 
         # check to see if enough points have been accumulated in buffer
-
         if counter >= 10 and i == 1 and tracked_points[-10] is not None:
             # compute the difference between the x and y
             # coordinates and re-initialize the direction
