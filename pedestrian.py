@@ -31,3 +31,11 @@ for imagePath in paths.list_images(args["images"]):
         # draw the final bounding boxes
         for (xA, yA, xB, yB) in pick:
             cv2.rectangle(image, (xA, yA), (xB, yB), (0, 255, 0), 2)
+            # show some information on the number of bounding boxes
+        filename = imagePath[imagePath.rfind("/") + 1:]
+        print(f'[INFO] {filename}:original boxes, len{rects} after suppression{len(pick)}')
+
+        # show the output images
+        cv2.imshow("Before NMS", orig)
+        cv2.imshow("After NMS", image)
+        cv2.waitKey(0)
