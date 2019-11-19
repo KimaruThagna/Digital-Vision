@@ -23,3 +23,8 @@ for imagePath in paths.list_images(args["images"]):
     (rects, weights) = hog.detectMultiScale(image, winStride=(4, 4),padding=(8, 8), scale=1.05)
     for (x, y, w, h) in rects: # draw the original bounding boxes
         cv2.rectangle(orig, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        # apply non-maxima suppression to the bounding boxes using a
+        # fairly large overlap threshold to try to maintain overlapping
+        # boxes that are still people
+        rects = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rects])
+        pick = non_max_suppression(rects, probs=None, overlapThresh=0.65)
